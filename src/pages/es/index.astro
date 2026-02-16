@@ -30,6 +30,8 @@ const defaultFormAction = `https://formsubmit.co/${encodeURIComponent(email)}`;
 const contactFormAction = (import.meta.env.PUBLIC_CONTACT_FORM_ACTION ?? defaultFormAction).trim();
 const servicesEnv = (import.meta.env.PUBLIC_SERVICES_URL ?? '').trim().replace(/\/$/, '');
 const contactSuccessUrl = servicesEnv ? `${servicesEnv}/${lang}?contact=ok#contact` : undefined;
+const contactFeedbackSuccess = 'Mensaje enviado';
+const contactFeedbackError = 'No se pudo enviar el mensaje. Inténtalo de nuevo.';
 
 const trustStack: Array<{ name: string; icon: 'atom' | 'server' | 'container' | 'cloud' }> = [
   { name: 'React', icon: 'atom' },
@@ -129,9 +131,10 @@ const trustStack: Array<{ name: string; icon: 'atom' | 'server' | 'container' | 
 
   <Section id="contact" title={t.contact.title}>
     <p>{t.contact.text}</p>
-    <form class="contact-form card" action={contactFormAction} method="POST">
+    <form class="contact-form card" action={contactFormAction} method="POST" data-contact-form>
       <input type="hidden" name="_subject" value="[services-site] Nueva consulta desde la web" />
       <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
       {contactSuccessUrl && <input type="hidden" name="_next" value={contactSuccessUrl} />}
       <input class="contact-honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" />
 
@@ -183,6 +186,8 @@ const trustStack: Array<{ name: string; icon: 'atom' | 'server' | 'container' | 
         <button type="submit" class="btn btn-primary-glow">{t.contact.form.submitLabel}</button>
         <a href={cvHref} class="btn btn-secondary">{t.contact.cvLabel}</a>
       </div>
+
+      <p class="contact-form-feedback" data-contact-feedback aria-live="polite"></p>
     </form>
 
     <p class="contact-form-note">
@@ -191,3 +196,64 @@ const trustStack: Array<{ name: string; icon: 'atom' | 'server' | 'container' | 
     </p>
   </Section>
 </Layout>
+
+<script is:inline define:vars={{ contactFeedbackSuccess, contactFeedbackError }}>
+  (() => {
+    const form = document.querySelector('[data-contact-form]');
+    if (!(form instanceof HTMLFormElement)) return;
+
+    const feedback = form.querySelector('[data-contact-feedback]');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const submitControl = submitButton instanceof HTMLButtonElement ? submitButton : null;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      if (submitControl) {
+        submitControl.disabled = true;
+        submitControl.setAttribute('aria-busy', 'true');
+      }
+
+      if (feedback instanceof HTMLElement) {
+        feedback.textContent = '';
+        feedback.dataset.state = '';
+      }
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        form.reset();
+
+        if (feedback instanceof HTMLElement) {
+          feedback.textContent = contactFeedbackSuccess;
+          feedback.dataset.state = 'success';
+        }
+      } catch {
+        if (feedback instanceof HTMLElement) {
+          feedback.textContent = contactFeedbackError;
+          feedback.dataset.state = 'error';
+        }
+      } finally {
+        if (submitControl) {
+          submitControl.disabled = false;
+          submitControl.removeAttribute('aria-busy');
+        }
+      }
+    });
+  })();
+</script>
