@@ -79,7 +79,7 @@ const aboutHref = `${cvBase}/${lang}`;
           <a href={`/${lang}#maintenance`}>{isEs ? 'Mantenimiento' : 'Maintenance'}</a>
           <a href={`/${lang}#contact`}>{isEs ? 'Contacto' : 'Contact'}</a>
           <a href={aboutHref}>{isEs ? 'Sobre mí' : 'About'}</a>
-          <div class="lang-switch">
+          <div class={`lang-switch ${isEs ? 'is-es' : 'is-en'}`}>
             <a href={esHref} class={isEs ? 'active' : ''}>ES</a>
             <a href={enHref} class={!isEs ? 'active' : ''}>EN</a>
           </div>
