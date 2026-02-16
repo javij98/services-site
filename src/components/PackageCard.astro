@@ -1,0 +1,21 @@
+---
+interface Props {
+  name: string;
+  forWho: string;
+  bullets: string[];
+  priceHint: string;
+}
+
+const { name, forWho, bullets, priceHint } = Astro.props;
+---
+
+<article class="card">
+  <div class="card-header">
+    <h3>{name}</h3>
+    <span class="price-badge">{priceHint}</span>
+  </div>
+  <p class="card-subtitle">{forWho}</p>
+  <ul class="bullet-list">
+    {bullets.map((bullet) => <li>{bullet}</li>)}
+  </ul>
+</article>

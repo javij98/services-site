@@ -1,0 +1,126 @@
+---
+interface Props {
+  title: string;
+  lang: string;
+  description?: string;
+  canonicalPath?: string;
+}
+
+const { title, lang, description, canonicalPath } = Astro.props;
+
+const isEs = lang === 'es';
+const defaultCvUrl = 'https://javier-jimenez-molina.vercel.app';
+
+// --- Environment variables (with safe fallbacks) ---
+const servicesBase = (import.meta.env.PUBLIC_SERVICES_URL ?? '').replace(/\/$/, '');
+const siteName = (import.meta.env.PUBLIC_SITE_NAME ?? '').trim() || 'Javier Jimenez';
+
+const normalizeUrl = (value: string) => {
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return value;
+  }
+
+  return `https://${value}`;
+};
+
+const cvEnv = (import.meta.env.PUBLIC_CV_URL ?? '').trim().replace(/\/$/, '');
+const cvBase = normalizeUrl(cvEnv || defaultCvUrl);
+
+// --- i18n + canonical path resolution ---
+const pathname = canonicalPath ?? Astro.url.pathname;
+const pathWithoutLang = (() => {
+  if (pathname === '/' || pathname === '/es' || pathname === '/en') {
+    return '';
+  }
+
+  if (pathname.startsWith('/es/') || pathname.startsWith('/en/')) {
+    return pathname.slice(3);
+  }
+
+  return pathname;
+})();
+
+const esPath = `/es${pathWithoutLang}`;
+const enPath = `/en${pathWithoutLang}`;
+const esHref = servicesBase ? `${servicesBase}${esPath}` : esPath;
+const enHref = servicesBase ? `${servicesBase}${enPath}` : enPath;
+const canonicalHref = servicesBase ? `${servicesBase}${pathname}` : null;
+
+const aboutHref = `${cvBase}/${lang}`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description ?? ''} />
+    <meta property="og:title" content={`${title} — ${siteName}`} />
+    <meta property="og:description" content={description ?? ''} />
+    {
+      canonicalHref && (
+        <>
+          <link rel="canonical" href={canonicalHref} />
+          <link rel="alternate" hreflang="es" href={esHref} />
+          <link rel="alternate" hreflang="en" href={enHref} />
+        </>
+      )
+    }
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} — {siteName}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a href={`/${lang}`} class="site-logo">{siteName}</a>
+        <nav class="site-nav">
+          <a href={`/${lang}`}>{isEs ? 'Servicios' : 'Services'}</a>
+          <a href={`/${lang}#packages`}>{isEs ? 'Paquetes' : 'Packages'}</a>
+          <a href={`/${lang}#maintenance`}>{isEs ? 'Mantenimiento' : 'Maintenance'}</a>
+          <a href={`/${lang}#contact`}>{isEs ? 'Contacto' : 'Contact'}</a>
+          <a href={aboutHref}>{isEs ? 'Sobre mí' : 'About'}</a>
+          <div class="lang-switch">
+            <a href={esHref} class={isEs ? 'active' : ''}>ES</a>
+            <a href={enHref} class={!isEs ? 'active' : ''}>EN</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <script is:inline>
+      (() => {
+        const selectors = '.card, .process-step, .btn';
+
+        const setCursorVars = (element, event) => {
+          const rect = element.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          element.style.setProperty('--mouse-x', `${x}px`);
+          element.style.setProperty('--mouse-y', `${y}px`);
+        };
+
+        document.addEventListener(
+          'pointermove',
+          (event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+
+            const element = target.closest(selectors);
+            if (!element) return;
+
+            setCursorVars(element, event);
+          },
+          { passive: true }
+        );
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>

@@ -1,0 +1,93 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CardGrid from '../../components/CardGrid.astro';
+import Faq from '../../components/Faq.astro';
+import PackageCard from '../../components/PackageCard.astro';
+import ProcessSteps from '../../components/ProcessSteps.astro';
+import Section from '../../components/Section.astro';
+import { content, type Lang } from '../../data/siteContent';
+
+const lang: Lang = 'es';
+const t = content[lang];
+const defaultCvUrl = 'https://javier-jimenez-molina.vercel.app';
+const defaultContactEmail = 'jjime981@gmail.com';
+
+const normalizeUrl = (value: string) => {
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return value;
+  }
+
+  return `https://${value}`;
+};
+
+const cvEnv = (import.meta.env.PUBLIC_CV_URL ?? '').trim().replace(/\/$/, '');
+const cvBase = normalizeUrl(cvEnv || defaultCvUrl);
+const cvHref = `${cvBase}/${lang}`;
+const emailEnv = (import.meta.env.PUBLIC_CONTACT_EMAIL ?? '').trim();
+const email = (emailEnv || defaultContactEmail).replace(/^mailto:/i, '');
+const mailto = `mailto:${email}`;
+---
+
+<Layout title={t.meta.title} description={t.meta.description} lang={lang}>
+  <section class="section hero">
+    <h1>{t.hero.headline}</h1>
+    <p>{t.hero.subheadline}</p>
+    <div class="hero-actions">
+      <a href={t.hero.ctaPrimaryHref} class="btn">{t.hero.ctaPrimaryLabel}</a>
+      <a href={t.hero.ctaSecondaryHref} class="btn btn-secondary">{t.hero.ctaSecondaryLabel}</a>
+    </div>
+  </section>
+
+  <Section id="what" title={t.what.title}>
+    <ul class="bullet-list section-list">
+      {t.what.bullets.map((bullet) => <li>{bullet}</li>)}
+    </ul>
+  </Section>
+
+  <Section id="packages" title={t.packages.title}>
+    <p>{t.packages.note}</p>
+    <CardGrid>
+      {t.packages.items.map((item) => (
+        <PackageCard
+          name={item.name}
+          forWho={item.forWho}
+          bullets={item.bullets}
+          priceHint={item.priceHint}
+        />
+      ))}
+    </CardGrid>
+  </Section>
+
+  <Section id="maintenance" title={t.maintenance.title}>
+    <p>{t.maintenance.note}</p>
+    <CardGrid>
+      {t.maintenance.plans.map((plan) => (
+        <article class="card">
+          <div class="card-header">
+            <h3>{plan.name}</h3>
+            <span class="price-badge">{plan.priceHint}</span>
+          </div>
+          <ul class="bullet-list">
+            {plan.bullets.map((bullet) => <li>{bullet}</li>)}
+          </ul>
+        </article>
+      ))}
+    </CardGrid>
+  </Section>
+
+  <Section id="process" title={t.process.title}>
+    <ProcessSteps steps={t.process.steps} />
+  </Section>
+
+  <Section id="faq" title={t.faq.title}>
+    <Faq items={t.faq.items} />
+  </Section>
+
+  <Section id="contact" title={t.contact.title}>
+    <p>{t.contact.text}</p>
+    <div class="hero-actions">
+      <a href={mailto} class="btn">{t.contact.emailLabel}</a>
+      <a href={cvHref} class="btn btn-secondary">{t.contact.cvLabel}</a>
+    </div>
+  </Section>
+</Layout>

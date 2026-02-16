@@ -1,0 +1,24 @@
+---
+type Step = {
+  name: string;
+  text: string;
+};
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="process-steps">
+  {steps.map((step, index) => (
+    <li class="process-step">
+      <span class="process-index">{index + 1}</span>
+      <div>
+        <h3>{step.name}</h3>
+        <p>{step.text}</p>
+      </div>
+    </li>
+  ))}
+</ol>
