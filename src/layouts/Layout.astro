@@ -23,8 +23,6 @@ const normalizeUrl = (value: string) => {
   return `https://${value}`;
 };
 
-const servicesHref = 'https://services-site-ten.vercel.app';
-const servicesLabel = isEs ? 'Ir a Servicios' : 'Go to Services';
 const cvEnv = (import.meta.env.PUBLIC_CV_URL ?? '').trim().replace(/\/$/, '');
 const cvBase = normalizeUrl(cvEnv || defaultCvUrl);
 
@@ -77,14 +75,6 @@ const aboutHref = `${cvBase}/${lang}`;
         <a href={`/${lang}`} class="site-logo">{siteName}</a>
         <nav class="site-nav">
           <a href={`/${lang}`}>{isEs ? 'Inicio' : 'Home'}</a>
-          <a
-            href={servicesHref}
-            class="site-nav-services"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {servicesLabel}
-          </a>
           <a href={`/${lang}#packages`}>{isEs ? 'Paquetes' : 'Packages'}</a>
           <a href={`/${lang}#maintenance`}>{isEs ? 'Mantenimiento' : 'Maintenance'}</a>
           <a href={`/${lang}#contact`}>{isEs ? 'Contacto' : 'Contact'}</a>
