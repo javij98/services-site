@@ -70,6 +70,18 @@ export type SiteContent = {
     emailLabel: string;
     emailHref: string;
     cvLabel: string;
+    form: {
+      nameLabel: string;
+      namePlaceholder: string;
+      emailLabel: string;
+      emailPlaceholder: string;
+      companyLabel: string;
+      companyPlaceholder: string;
+      messageLabel: string;
+      messagePlaceholder: string;
+      submitLabel: string;
+      hint: string;
+    };
   };
 };
 
@@ -214,9 +226,21 @@ export const content: Record<Lang, SiteContent> = {
     contact: {
       title: 'Contacto',
       text: 'Si tienes una idea o un cuello de botella operativo, escribeme y te propongo un siguiente paso claro.',
-      emailLabel: 'Enviar email',
+      emailLabel: 'Email directo',
       emailHref: 'mailto:contacto@example.com',
       cvLabel: 'Sobre mi',
+      form: {
+        nameLabel: 'Nombre',
+        namePlaceholder: 'Tu nombre',
+        emailLabel: 'Email',
+        emailPlaceholder: 'tu@email.com',
+        companyLabel: 'Empresa (opcional)',
+        companyPlaceholder: 'Nombre de empresa',
+        messageLabel: 'Mensaje',
+        messagePlaceholder: 'Cuéntame brevemente tu proyecto, objetivo y timeline.',
+        submitLabel: 'Enviar consulta',
+        hint: 'Te responderé por email con el siguiente paso recomendado.',
+      },
     },
   },
   en: {
@@ -359,9 +383,21 @@ export const content: Record<Lang, SiteContent> = {
     contact: {
       title: 'Contact',
       text: 'If you already have an idea or an operational bottleneck, email me and I will suggest a clear next step.',
-      emailLabel: 'Send email',
+      emailLabel: 'Direct email',
       emailHref: 'mailto:contacto@example.com',
       cvLabel: 'About me',
+      form: {
+        nameLabel: 'Name',
+        namePlaceholder: 'Your name',
+        emailLabel: 'Email',
+        emailPlaceholder: 'you@email.com',
+        companyLabel: 'Company (optional)',
+        companyPlaceholder: 'Company name',
+        messageLabel: 'Message',
+        messagePlaceholder: 'Share a quick summary of your project, goal, and expected timeline.',
+        submitLabel: 'Send inquiry',
+        hint: 'I will reply by email with the best next step.',
+      },
     },
   },
 };

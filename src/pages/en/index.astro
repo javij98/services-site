@@ -26,6 +26,10 @@ const cvHref = `${cvBase}/${lang}`;
 const emailEnv = (import.meta.env.PUBLIC_CONTACT_EMAIL ?? '').trim();
 const email = (emailEnv || defaultContactEmail).replace(/^mailto:/i, '');
 const mailto = `mailto:${email}`;
+const defaultFormAction = `https://formsubmit.co/${encodeURIComponent(email)}`;
+const contactFormAction = (import.meta.env.PUBLIC_CONTACT_FORM_ACTION ?? defaultFormAction).trim();
+const servicesEnv = (import.meta.env.PUBLIC_SERVICES_URL ?? '').trim().replace(/\/$/, '');
+const contactSuccessUrl = servicesEnv ? `${servicesEnv}/${lang}?contact=ok#contact` : undefined;
 
 const trustStack: Array<{ name: string; icon: 'atom' | 'server' | 'container' | 'cloud' }> = [
   { name: 'React', icon: 'atom' },
@@ -125,9 +129,65 @@ const trustStack: Array<{ name: string; icon: 'atom' | 'server' | 'container' | 
 
   <Section id="contact" title={t.contact.title}>
     <p>{t.contact.text}</p>
-    <div class="hero-actions">
-      <a href={mailto} class="btn">{t.contact.emailLabel}</a>
-      <a href={cvHref} class="btn btn-secondary">{t.contact.cvLabel}</a>
-    </div>
+    <form class="contact-form card" action={contactFormAction} method="POST">
+      <input type="hidden" name="_subject" value="[services-site] New inquiry from website" />
+      <input type="hidden" name="_template" value="table" />
+      {contactSuccessUrl && <input type="hidden" name="_next" value={contactSuccessUrl} />}
+      <input class="contact-honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" />
+
+      <div class="contact-form-grid">
+        <label class="form-field">
+          <span>{t.contact.form.nameLabel}</span>
+          <input
+            type="text"
+            name="name"
+            placeholder={t.contact.form.namePlaceholder}
+            required
+            autocomplete="name"
+          />
+        </label>
+
+        <label class="form-field">
+          <span>{t.contact.form.emailLabel}</span>
+          <input
+            type="email"
+            name="email"
+            placeholder={t.contact.form.emailPlaceholder}
+            required
+            autocomplete="email"
+          />
+        </label>
+      </div>
+
+      <label class="form-field">
+        <span>{t.contact.form.companyLabel}</span>
+        <input
+          type="text"
+          name="company"
+          placeholder={t.contact.form.companyPlaceholder}
+          autocomplete="organization"
+        />
+      </label>
+
+      <label class="form-field">
+        <span>{t.contact.form.messageLabel}</span>
+        <textarea
+          name="message"
+          rows="6"
+          placeholder={t.contact.form.messagePlaceholder}
+          required
+        ></textarea>
+      </label>
+
+      <div class="contact-form-actions">
+        <button type="submit" class="btn btn-primary-glow">{t.contact.form.submitLabel}</button>
+        <a href={cvHref} class="btn btn-secondary">{t.contact.cvLabel}</a>
+      </div>
+    </form>
+
+    <p class="contact-form-note">
+      {t.contact.form.hint}
+      <a href={mailto}>{t.contact.emailLabel}</a>
+    </p>
   </Section>
 </Layout>
