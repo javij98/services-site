@@ -75,16 +75,20 @@ const aboutHref = `${cvBase}/${lang}`;
   <body>
     <header class="site-header">
       <div class="container">
-        <a href={`/${lang}`} class="site-logo">{siteName}</a>
+        <a href={`/${lang}#home`} class="site-logo">{siteName}</a>
         <nav class="site-nav">
-          <a href={`/${lang}`}>{isEs ? 'Inicio' : 'Home'}</a>
-          <a href={`/${lang}#packages`}>{isEs ? 'Paquetes' : 'Packages'}</a>
-          <a href={`/${lang}#maintenance`}>{isEs ? 'Mantenimiento' : 'Maintenance'}</a>
-          <a href={`/${lang}#contact`}>{isEs ? 'Contacto' : 'Contact'}</a>
-          <a href={aboutHref}>{isEs ? 'Sobre mí' : 'About'}</a>
+          <div class="site-nav-links">
+            <a href={`/${lang}#home`}>{isEs ? 'Inicio' : 'Home'}</a>
+            <a href={`/${lang}#packages`}>{isEs ? 'Paquetes' : 'Packages'}</a>
+            <a href={`/${lang}#maintenance`}>{isEs ? 'Mantenimiento' : 'Maintenance'}</a>
+            <a href={`/${lang}#contact`}>{isEs ? 'Contacto' : 'Contact'}</a>
+          </div>
+          <a href={aboutHref} target="_blank" rel="noopener noreferrer" class="site-nav-external">
+            {isEs ? 'Sobre mí' : 'About'}
+          </a>
           <div class={`lang-switch ${isEs ? 'is-es' : 'is-en'}`}>
-            <a href={esHref} class={isEs ? 'active' : ''}>ES</a>
-            <a href={enHref} class={!isEs ? 'active' : ''}>EN</a>
+            <a href={esPath} class={isEs ? 'active' : ''}>ES</a>
+            <a href={enPath} class={!isEs ? 'active' : ''}>EN</a>
           </div>
         </nav>
       </div>

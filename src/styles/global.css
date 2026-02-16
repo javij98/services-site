@@ -227,6 +227,12 @@ a:hover {
   gap: 1.5rem;
 }
 
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .site-nav a {
   font-size: 0.95rem;
   color: var(--color-muted);
@@ -235,11 +241,13 @@ a:hover {
   transition: color var(--duration-fast) var(--ease-smooth);
 }
 
-.site-nav a.site-nav-services {
+.site-nav .site-nav-external {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.36rem 0.75rem;
+  margin-left: 0.3rem;
   border-radius: 999px;
   border: 1px solid rgba(6, 182, 212, 0.45);
   background-color: rgba(6, 182, 212, 0.12);
@@ -252,7 +260,16 @@ a:hover {
   box-shadow: inset 0 0 0 1px rgba(6, 182, 212, 0.12);
 }
 
-.site-nav a.site-nav-services::after {
+.site-nav .site-nav-external::before {
+  content: '';
+  position: absolute;
+  left: -0.95rem;
+  width: 1px;
+  height: 1.1rem;
+  background-color: rgba(51, 65, 85, 0.88);
+}
+
+.site-nav .site-nav-external::after {
   content: "↗";
   font-size: 0.78em;
   opacity: 0.9;
@@ -263,7 +280,7 @@ a:hover {
   text-decoration: none;
 }
 
-.site-nav a.site-nav-services:hover {
+.site-nav .site-nav-external:hover {
   color: #001018;
   border-color: rgba(34, 211, 238, 0.85);
   background-color: var(--color-primary-hover);
@@ -1229,6 +1246,19 @@ main {
     width: 100%;
     gap: 1rem;
     flex-wrap: wrap;
+  }
+
+  .site-nav-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .site-nav .site-nav-external {
+    margin-left: 0;
+  }
+
+  .site-nav .site-nav-external::before {
+    display: none;
   }
 
   .hero h1 {
