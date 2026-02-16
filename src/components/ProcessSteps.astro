@@ -14,8 +14,8 @@ const { steps } = Astro.props;
 <ol class="process-steps">
   {steps.map((step, index) => (
     <li class="process-step">
-      <span class="process-index">{index + 1}</span>
-      <div>
+      <span class="process-index">{String(index + 1).padStart(2, '0')}</span>
+      <div class="process-step-card">
         <h3>{step.name}</h3>
         <p>{step.text}</p>
       </div>

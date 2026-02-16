@@ -755,32 +755,130 @@ main {
 }
 
 .process-steps {
+  --timeline-gap: 1rem;
+  --timeline-count: 4;
   list-style: none;
+  margin-top: 1.7rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(var(--timeline-count), minmax(0, 1fr));
+  align-items: stretch;
+  gap: var(--timeline-gap);
+  width: 100%;
+  overflow: hidden;
+  padding: 0.2rem 0 0;
 }
 
 .process-step {
+  --timeline-node-size: 2.35rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+  height: 100%;
+}
+
+.process-step::before,
+.process-step::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--timeline-node-size) / 2);
+  height: 1px;
+  width: calc(50% + (var(--timeline-gap) / 2) - (var(--timeline-node-size) / 2));
+  background-color: rgba(6, 182, 212, 0.52);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.process-step::before {
+  left: calc(var(--timeline-gap) / -2);
+}
+
+.process-step::after {
+  right: calc(var(--timeline-gap) / -2);
+}
+
+.process-step:first-child::before,
+.process-step:last-child::after {
+  opacity: 0;
+}
+
+@media (max-width: 980px) {
+  .process-steps {
+    --timeline-count: 2;
+  }
+
+  .process-step::before,
+  .process-step::after {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .process-steps {
+    --timeline-count: 1;
+  }
+}
+
+.process-index {
+  position: relative;
+  width: var(--timeline-node-size);
+  height: var(--timeline-node-size);
+  border-radius: 999px;
+  border: 1px solid rgba(6, 182, 212, 0.58);
+  background:
+    linear-gradient(180deg, rgba(6, 182, 212, 0.22), rgba(6, 182, 212, 0.08)),
+    #020617;
+  color: #67e8f9;
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.015em;
+  box-shadow:
+    0 0 0 1px rgba(6, 182, 212, 0.2),
+    0 0 18px rgba(6, 182, 212, 0.18);
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.process-index::after {
+  content: "";
+  position: absolute;
+  inset: -0.35rem;
+  border-radius: inherit;
+  border: 1px solid rgba(6, 182, 212, 0.22);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-smooth);
+}
+
+.process-step-card {
+  width: 100%;
+  min-height: 11.2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.45rem;
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  display: flex;
-  gap: 0.75rem;
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   background-color: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  padding: 1rem;
+  padding: 1rem 1.05rem;
   transition:
     transform var(--duration-base) var(--ease-smooth),
     border-color var(--duration-base) var(--ease-smooth),
     box-shadow var(--duration-base) var(--ease-smooth);
 }
 
-.process-step::after {
+.process-step-card::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -795,40 +893,30 @@ main {
   z-index: 0;
 }
 
-.process-step > * {
+.process-step-card > * {
   position: relative;
   z-index: 1;
 }
 
-.process-step:hover {
+.process-step:hover .process-step-card {
   transform: translateY(-2px);
   border-color: rgba(6, 182, 212, 0.45);
   box-shadow: 0 0 0 1px rgba(6, 182, 212, 0.15);
 }
 
-.process-step:hover::after {
+.process-step:hover .process-index::after {
   opacity: 1;
 }
 
-.process-index {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  border: 1px solid rgba(6, 182, 212, 0.45);
-  background-color: rgba(6, 182, 212, 0.12);
-  color: var(--color-primary);
-  font-family: var(--font-mono);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  flex-shrink: 0;
+.process-step:hover .process-step-card::after {
+  opacity: 1;
 }
 
 .process-step h3 {
   font-size: 1.05rem;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0;
   color: var(--color-text);
+  text-align: center;
 }
 
 .process-step p {
@@ -836,6 +924,7 @@ main {
   font-size: 0.96rem;
   line-height: 1.5;
   max-width: none;
+  text-align: center;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -925,8 +1014,7 @@ main {
   .solution-grid,
   .pricing-grid,
   .maintenance-split,
-  .card-grid,
-  .process-steps {
+  .card-grid {
     grid-template-columns: 1fr;
   }
 
@@ -938,7 +1026,7 @@ main {
 @media (pointer: coarse) {
   .btn::after,
   .card::after,
-  .process-step::after {
+  .process-step-card::after {
     display: none;
   }
 }
