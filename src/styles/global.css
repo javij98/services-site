@@ -641,6 +641,35 @@ main {
   max-width: none;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html.reveal-ready .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+    filter: blur(4px);
+    will-change: opacity, transform, filter;
+  }
+
+  html.reveal-ready .reveal-on-scroll.is-visible {
+    animation: card-reveal calc(var(--duration-base) + 140ms) var(--ease-smooth) both;
+    animation-delay: calc(var(--reveal-order, 0) * 70ms);
+    will-change: auto;
+  }
+}
+
+@keyframes card-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
 .faq-list {
   margin-top: 1rem;
   display: grid;

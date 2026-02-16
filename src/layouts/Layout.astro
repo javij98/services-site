@@ -93,7 +93,8 @@ const aboutHref = `${cvBase}/${lang}`;
 
     <script is:inline>
       (() => {
-        const selectors = '.card, .process-step, .btn';
+        const pointerSelectors = '.card, .process-step, .btn';
+        const revealTargets = Array.from(document.querySelectorAll('.card, .process-step'));
 
         const setCursorVars = (element, event) => {
           const rect = element.getBoundingClientRect();
@@ -109,13 +110,49 @@ const aboutHref = `${cvBase}/${lang}`;
             const target = event.target;
             if (!(target instanceof Element)) return;
 
-            const element = target.closest(selectors);
+            const element = target.closest(pointerSelectors);
             if (!element) return;
 
             setCursorVars(element, event);
           },
           { passive: true }
         );
+
+        if (revealTargets.length === 0) return;
+
+        revealTargets.forEach((element, index) => {
+          element.classList.add('reveal-on-scroll');
+          element.style.setProperty('--reveal-order', `${index % 6}`);
+        });
+
+        if (
+          !('IntersectionObserver' in window) ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          revealTargets.forEach((element) => element.classList.add('is-visible'));
+          return;
+        }
+
+        document.documentElement.classList.add('reveal-ready');
+
+        const revealObserver = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            });
+          },
+          {
+            threshold: 0.18,
+            rootMargin: '0px 0px -8% 0px'
+          }
+        );
+
+        revealTargets.forEach((element) => {
+          revealObserver.observe(element);
+        });
       })();
     </script>
   </body>
