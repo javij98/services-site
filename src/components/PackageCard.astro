@@ -3,19 +3,30 @@ interface Props {
   name: string;
   forWho: string;
   bullets: string[];
-  priceHint: string;
+  ctaLabel: string;
+  ctaHref: string;
+  featured?: boolean;
 }
 
-const { name, forWho, bullets, priceHint } = Astro.props;
+const { name, forWho, bullets, ctaLabel, ctaHref, featured = false } = Astro.props;
 ---
 
-<article class="card">
+<article class:list={['card', 'package-card', featured && 'is-featured']}>
   <div class="card-header">
     <h3>{name}</h3>
-    <span class="price-badge">{priceHint}</span>
   </div>
   <p class="card-subtitle">{forWho}</p>
-  <ul class="bullet-list">
-    {bullets.map((bullet) => <li>{bullet}</li>)}
+  <ul class="feature-list">
+    {
+      bullets.map((bullet) => (
+        <li>
+          <span class="feature-check" aria-hidden="true">✓</span>
+          <span>{bullet}</span>
+        </li>
+      ))
+    }
   </ul>
+  <a href={ctaHref} class:list={['btn', 'package-btn', featured ? 'package-btn-solid' : 'package-btn-outline']}>
+    {ctaLabel}
+  </a>
 </article>

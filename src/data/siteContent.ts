@@ -1,16 +1,18 @@
 export type Lang = 'es' | 'en';
 
+type WhatCard = {
+  title: string;
+  description: string;
+  icon: 'rocket' | 'workflow' | 'plug-zap' | 'shield-check';
+};
+
 type PackageItem = {
   name: string;
   forWho: string;
   bullets: string[];
-  priceHint: string;
-};
-
-type MaintenancePlan = {
-  name: string;
-  bullets: string[];
-  priceHint: string;
+  ctaLabel: string;
+  ctaHref: string;
+  featured?: boolean;
 };
 
 type ProcessStep = {
@@ -38,17 +40,21 @@ export type SiteContent = {
   };
   what: {
     title: string;
-    bullets: string[];
+    cards: WhatCard[];
   };
   packages: {
     title: string;
-    note: string;
+    intro: string;
+    footnote: string;
     items: PackageItem[];
   };
   maintenance: {
     title: string;
-    note: string;
-    plans: MaintenancePlan[];
+    headline: string;
+    text: string;
+    uptimeLabel: string;
+    uptimeValue: string;
+    coverage: string[];
   };
   process: {
     title: string;
@@ -67,9 +73,6 @@ export type SiteContent = {
   };
 };
 
-const orientativeLabelEs = 'Orientativo segun alcance';
-const orientativeLabelEn = 'Indicative, depends on scope';
-
 export const content: Record<Lang, SiteContent> = {
   es: {
     meta: {
@@ -81,23 +84,40 @@ export const content: Record<Lang, SiteContent> = {
       headline: 'Web apps para lanzar, automatizaciones para escalar',
       subheadline:
         'Construyo MVPs en produccion, conecto tus herramientas y me encargo del mantenimiento mensual para que tu equipo avance sin friccion.',
-      ctaPrimaryLabel: 'Contar mi proyecto',
+      ctaPrimaryLabel: 'Agendar',
       ctaPrimaryHref: '#contact',
-      ctaSecondaryLabel: 'Ver paquetes',
-      ctaSecondaryHref: '#packages',
+      ctaSecondaryLabel: 'Servicios',
+      ctaSecondaryHref: '#what',
     },
     what: {
       title: 'Que puedo resolver',
-      bullets: [
-        'MVPs web con foco en tiempo de salida y validacion real.',
-        'Automatizaciones entre CRM, pagos, email, soporte y operaciones internas.',
-        'Integraciones API para eliminar tareas manuales y errores de sincronizacion.',
-        'Mantenimiento mensual con seguridad, backups, monitorizacion y mejoras pequenas.',
+      cards: [
+        {
+          title: 'MVP en produccion',
+          description: 'Lanza una primera version util en semanas, con foco en adopcion y feedback real.',
+          icon: 'rocket',
+        },
+        {
+          title: 'Automatizacion operativa',
+          description: 'Conecta CRM, pagos, email y soporte para eliminar pasos manuales.',
+          icon: 'workflow',
+        },
+        {
+          title: 'Integraciones API confiables',
+          description: 'Sincroniza sistemas criticos con autenticacion robusta y manejo de errores.',
+          icon: 'plug-zap',
+        },
+        {
+          title: 'Mantenimiento continuo',
+          description: 'Reduce riesgos con monitorizacion, backups verificados y mejoras constantes.',
+          icon: 'shield-check',
+        },
       ],
     },
     packages: {
-      title: 'Paquetes para empezar',
-      note: 'Elegimos el paquete segun tu contexto y definimos alcance desde la primera llamada.',
+      title: 'Paquetes para acelerar',
+      intro: 'Elige una ruta de ejecucion clara y empieza con entregables desde la primera semana.',
+      footnote: 'Orientativo segun alcance.',
       items: [
         {
           name: 'MVP Launch',
@@ -107,7 +127,8 @@ export const content: Record<Lang, SiteContent> = {
             'Desarrollo de funcionalidades clave y despliegue.',
             'Base de analitica y documentacion para evolucionar.',
           ],
-          priceHint: orientativeLabelEs,
+          ctaLabel: 'Solicitar MVP Launch',
+          ctaHref: '#contact',
         },
         {
           name: 'Automation Sprint',
@@ -117,7 +138,9 @@ export const content: Record<Lang, SiteContent> = {
             'Automatizaciones entre herramientas con reglas claras.',
             'Alertas y trazabilidad para reducir errores operativos.',
           ],
-          priceHint: orientativeLabelEs,
+          ctaLabel: 'Reservar Automation Sprint',
+          ctaHref: '#contact',
+          featured: true,
         },
         {
           name: 'Integration Boost',
@@ -127,41 +150,23 @@ export const content: Record<Lang, SiteContent> = {
             'Sincronizacion de datos confiable entre plataformas.',
             'Pruebas y monitoreo basico post-lanzamiento.',
           ],
-          priceHint: orientativeLabelEs,
+          ctaLabel: 'Activar Integration Boost',
+          ctaHref: '#contact',
         },
       ],
     },
     maintenance: {
       title: 'Mantenimiento mensual',
-      note: 'Planes continuos para cuidar la salud del producto mientras sigues entregando valor.',
-      plans: [
-        {
-          name: 'Plan Base',
-          bullets: [
-            'Actualizaciones de seguridad y dependencias.',
-            'Backups verificados y restauracion documentada.',
-            'Monitorizacion de disponibilidad y errores criticos.',
-          ],
-          priceHint: orientativeLabelEs,
-        },
-        {
-          name: 'Plan Continuo',
-          bullets: [
-            'Todo lo del Plan Base.',
-            'Bolsa mensual para mejoras pequenas priorizadas.',
-            'Revision de rendimiento y optimizaciones puntuales.',
-          ],
-          priceHint: orientativeLabelEs,
-        },
-        {
-          name: 'Plan Evolucion',
-          bullets: [
-            'Todo lo del Plan Continuo.',
-            'Soporte de incidencias con tiempos de respuesta pactados.',
-            'Iteraciones tecnicas para nuevas capacidades del producto.',
-          ],
-          priceHint: orientativeLabelEs,
-        },
+      headline: 'Duerme tranquilo mientras tu producto sigue vendiendo.',
+      text: 'Gestiono la operacion tecnica, prevengo incidencias y mantengo tu stack estable para que tu equipo se enfoque en negocio.',
+      uptimeLabel: 'Uptime',
+      uptimeValue: '99.9%',
+      coverage: [
+        'Parches de seguridad y actualizacion de dependencias.',
+        'Backups automaticos con pruebas de restauracion.',
+        'Monitorizacion de errores, latencia y disponibilidad 24/7.',
+        'Respuesta a incidencias criticas con protocolo acordado.',
+        'Bolsa de mejoras tecnicas para evolucion continua.',
       ],
     },
     process: {
@@ -224,23 +229,40 @@ export const content: Record<Lang, SiteContent> = {
       headline: 'Launch your web app, automate your operations',
       subheadline:
         'I ship production-ready MVPs, connect your tools, and handle monthly maintenance so your team keeps moving.',
-      ctaPrimaryLabel: 'Share your project',
+      ctaPrimaryLabel: 'Book a call',
       ctaPrimaryHref: '#contact',
-      ctaSecondaryLabel: 'View packages',
-      ctaSecondaryHref: '#packages',
+      ctaSecondaryLabel: 'Services',
+      ctaSecondaryHref: '#what',
     },
     what: {
       title: 'What I help you solve',
-      bullets: [
-        'Web MVPs built for fast validation and real user feedback.',
-        'Automations across CRM, billing, email, support and internal ops.',
-        'API integrations that remove manual work and sync issues.',
-        'Monthly maintenance covering security, backups, monitoring and small improvements.',
+      cards: [
+        {
+          title: 'Production-ready MVPs',
+          description: 'Ship a usable first release fast, focused on user adoption and measurable feedback.',
+          icon: 'rocket',
+        },
+        {
+          title: 'Operational automations',
+          description: 'Connect CRM, billing, email and support flows to eliminate repetitive manual work.',
+          icon: 'workflow',
+        },
+        {
+          title: 'Reliable API integrations',
+          description: 'Sync critical systems with solid auth, observability and error handling.',
+          icon: 'plug-zap',
+        },
+        {
+          title: 'Continuous maintenance',
+          description: 'Keep your platform stable with monitoring, verified backups and constant improvements.',
+          icon: 'shield-check',
+        },
       ],
     },
     packages: {
-      title: 'Packages to get started',
-      note: 'We pick the right package for your stage and confirm scope from day one.',
+      title: 'Packages to accelerate',
+      intro: 'Choose a clear execution path and start delivering outcomes from the first week.',
+      footnote: 'Indicative, depends on scope.',
       items: [
         {
           name: 'MVP Launch',
@@ -250,7 +272,8 @@ export const content: Record<Lang, SiteContent> = {
             'Core feature development and deployment.',
             'Analytics baseline and handoff documentation.',
           ],
-          priceHint: orientativeLabelEn,
+          ctaLabel: 'Start MVP Launch',
+          ctaHref: '#contact',
         },
         {
           name: 'Automation Sprint',
@@ -260,7 +283,9 @@ export const content: Record<Lang, SiteContent> = {
             'Tool-to-tool automations with clear business rules.',
             'Alerts and traceability to reduce operational mistakes.',
           ],
-          priceHint: orientativeLabelEn,
+          ctaLabel: 'Book Automation Sprint',
+          ctaHref: '#contact',
+          featured: true,
         },
         {
           name: 'Integration Boost',
@@ -270,41 +295,23 @@ export const content: Record<Lang, SiteContent> = {
             'Stable cross-platform data synchronization.',
             'Testing and baseline post-release monitoring.',
           ],
-          priceHint: orientativeLabelEn,
+          ctaLabel: 'Activate Integration Boost',
+          ctaHref: '#contact',
         },
       ],
     },
     maintenance: {
       title: 'Monthly maintenance',
-      note: 'Ongoing plans to keep your product stable while you continue shipping value.',
-      plans: [
-        {
-          name: 'Base Plan',
-          bullets: [
-            'Security updates and dependency maintenance.',
-            'Verified backups and restoration playbook.',
-            'Availability and critical error monitoring.',
-          ],
-          priceHint: orientativeLabelEn,
-        },
-        {
-          name: 'Continuous Plan',
-          bullets: [
-            'Everything in Base Plan.',
-            'Monthly bandwidth for prioritized small improvements.',
-            'Performance reviews with focused optimizations.',
-          ],
-          priceHint: orientativeLabelEn,
-        },
-        {
-          name: 'Growth Plan',
-          bullets: [
-            'Everything in Continuous Plan.',
-            'Incident support with agreed response times.',
-            'Technical iterations for new product capabilities.',
-          ],
-          priceHint: orientativeLabelEn,
-        },
+      headline: 'Sleep easy while your product keeps generating revenue.',
+      text: 'I run technical operations, prevent incidents, and keep your stack healthy so your team can focus on growth.',
+      uptimeLabel: 'Uptime',
+      uptimeValue: '99.9%',
+      coverage: [
+        'Security patching and dependency management.',
+        'Automated backups with restoration testing.',
+        '24/7 monitoring for errors, latency and availability.',
+        'Critical incident response under agreed SLAs.',
+        'Monthly technical improvement bandwidth.',
       ],
     },
     process: {

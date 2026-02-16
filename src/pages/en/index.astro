@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import CardGrid from '../../components/CardGrid.astro';
 import Faq from '../../components/Faq.astro';
+import LucideIcon from '../../components/LucideIcon.astro';
 import PackageCard from '../../components/PackageCard.astro';
 import ProcessSteps from '../../components/ProcessSteps.astro';
 import Section from '../../components/Section.astro';
@@ -26,6 +26,13 @@ const cvHref = `${cvBase}/${lang}`;
 const emailEnv = (import.meta.env.PUBLIC_CONTACT_EMAIL ?? '').trim();
 const email = (emailEnv || defaultContactEmail).replace(/^mailto:/i, '');
 const mailto = `mailto:${email}`;
+
+const trustStack: Array<{ name: string; icon: 'atom' | 'server' | 'container' | 'cloud' }> = [
+  { name: 'React', icon: 'atom' },
+  { name: 'Node', icon: 'server' },
+  { name: 'Docker', icon: 'container' },
+  { name: 'AWS', icon: 'cloud' },
+];
 ---
 
 <Layout title={t.meta.title} description={t.meta.description} lang={lang}>
@@ -33,46 +40,79 @@ const mailto = `mailto:${email}`;
     <h1>{t.hero.headline}</h1>
     <p>{t.hero.subheadline}</p>
     <div class="hero-actions">
-      <a href={t.hero.ctaPrimaryHref} class="btn">{t.hero.ctaPrimaryLabel}</a>
-      <a href={t.hero.ctaSecondaryHref} class="btn btn-secondary">{t.hero.ctaSecondaryLabel}</a>
+      <a href={t.hero.ctaPrimaryHref} class="btn btn-primary-glow">{t.hero.ctaPrimaryLabel}</a>
+      <a href={t.hero.ctaSecondaryHref} class="btn btn-outline-cyan">{t.hero.ctaSecondaryLabel}</a>
+    </div>
+    <div class="hero-trust">
+      <span class="hero-trust-label">Tech stack:</span>
+      <ul class="hero-trust-list">
+        {
+          trustStack.map((tech) => (
+            <li class="tech-badge">
+              <LucideIcon name={tech.icon} size={16} class="tech-icon" />
+              <span>{tech.name}</span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
   <Section id="what" title={t.what.title}>
-    <ul class="bullet-list section-list">
-      {t.what.bullets.map((bullet) => <li>{bullet}</li>)}
-    </ul>
+    <div class="solution-grid">
+      {
+        t.what.cards.map((card) => (
+          <article class="card solution-card">
+            <LucideIcon name={card.icon} size={34} class="solution-icon" />
+            <h3>{card.title}</h3>
+            <p>{card.description}</p>
+          </article>
+        ))
+      }
+    </div>
   </Section>
 
   <Section id="packages" title={t.packages.title}>
-    <p>{t.packages.note}</p>
-    <CardGrid>
+    <p class="section-intro">{t.packages.intro}</p>
+    <div class="pricing-grid">
       {t.packages.items.map((item) => (
         <PackageCard
           name={item.name}
           forWho={item.forWho}
           bullets={item.bullets}
-          priceHint={item.priceHint}
+          ctaLabel={item.ctaLabel}
+          ctaHref={item.ctaHref}
+          featured={item.featured}
         />
       ))}
-    </CardGrid>
+    </div>
+    <p class="pricing-footnote">{t.packages.footnote}</p>
   </Section>
 
   <Section id="maintenance" title={t.maintenance.title}>
-    <p>{t.maintenance.note}</p>
-    <CardGrid>
-      {t.maintenance.plans.map((plan) => (
-        <article class="card">
-          <div class="card-header">
-            <h3>{plan.name}</h3>
-            <span class="price-badge">{plan.priceHint}</span>
-          </div>
-          <ul class="bullet-list">
-            {plan.bullets.map((bullet) => <li>{bullet}</li>)}
-          </ul>
-        </article>
-      ))}
-    </CardGrid>
+    <div class="maintenance-split">
+      <div class="maintenance-copy">
+        <p class="maintenance-headline">{t.maintenance.headline}</p>
+        <p>{t.maintenance.text}</p>
+        <div class="uptime-pill">
+          <span class="uptime-label">{t.maintenance.uptimeLabel}</span>
+          <strong>{t.maintenance.uptimeValue}</strong>
+        </div>
+      </div>
+      <article class="card maintenance-card">
+        <h3>Coverage included</h3>
+        <ul class="feature-list">
+          {
+            t.maintenance.coverage.map((item) => (
+              <li>
+                <span class="feature-check" aria-hidden="true">✓</span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+    </div>
   </Section>
 
   <Section id="process" title={t.process.title}>
