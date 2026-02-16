@@ -216,7 +216,7 @@ export const content: Record<Lang, SiteContent> = {
       text: 'Si tienes una idea o un cuello de botella operativo, escribeme y te propongo un siguiente paso claro.',
       emailLabel: 'Enviar email',
       emailHref: 'mailto:contacto@example.com',
-      cvLabel: 'Ver CV',
+      cvLabel: 'Sobre mi',
     },
   },
   en: {
@@ -361,7 +361,7 @@ export const content: Record<Lang, SiteContent> = {
       text: 'If you already have an idea or an operational bottleneck, email me and I will suggest a clear next step.',
       emailLabel: 'Send email',
       emailHref: 'mailto:contacto@example.com',
-      cvLabel: 'View CV',
+      cvLabel: 'About me',
     },
   },
 };
