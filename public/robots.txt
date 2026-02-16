@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://services.TU_DOMINIO.com/sitemap-index.xml
+Sitemap: https://services.javier-jimenez-molina.vercel.app/sitemap-index.xml

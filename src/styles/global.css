@@ -224,9 +224,39 @@ a:hover {
   transition: color var(--duration-fast) var(--ease-smooth);
 }
 
+.site-nav a.site-nav-services {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(6, 182, 212, 0.45);
+  background-color: rgba(6, 182, 212, 0.12);
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  box-shadow: inset 0 0 0 1px rgba(6, 182, 212, 0.12);
+}
+
+.site-nav a.site-nav-services::after {
+  content: "↗";
+  font-size: 0.78em;
+  opacity: 0.9;
+}
+
 .site-nav a:hover {
   color: var(--color-primary);
   text-decoration: none;
+}
+
+.site-nav a.site-nav-services:hover {
+  color: #001018;
+  border-color: rgba(34, 211, 238, 0.85);
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 0 0 1px rgba(6, 182, 212, 0.24);
 }
 
 .lang-switch {
