@@ -70,12 +70,19 @@ const aboutHref = `${cvBase}/${lang}`;
       )
     }
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="shortcut icon" href="/favicon.ico" />
     <title>{title} — {siteName}</title>
   </head>
   <body>
     <header class="site-header">
       <div class="container">
-        <a href={`/${lang}#home`} class="site-logo">{siteName}</a>
+        <a href={`/${lang}#home`} class="site-logo" aria-label={siteName}>
+          <span class="site-logo-mark" aria-hidden="true">
+            <span class="site-logo-glyph">&gt;_</span>
+          </span>
+          <span class="site-logo-text">{siteName}</span>
+        </a>
         <nav class="site-nav">
           <div class="site-nav-links">
             <a href={`/${lang}#home`}>{isEs ? 'Inicio' : 'Home'}</a>
